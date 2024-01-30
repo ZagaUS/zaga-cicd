@@ -1,0 +1,26 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: observai-backend-config
+  namespace: observai-main
+data:
+  METRIC_TOPIC: observai-main-metrics-1
+  KEPLER_BOOTSTRAP_URL: >-
+    observai-persistent-kafka-bootstrap.kafka-space.svc.cluster.local:9092
+  MONGODB_URL: >-
+    mongodb://root:pass123@observai-mongodb-community-0.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017,observai-mongodb-community-1.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017,observai-mongodb-community-2.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017/admin?ssl=false
+  LOG_BOOTSTRAP_URL: >-
+    observai-persistent-kafka-bootstrap.kafka-space.svc.cluster.local:9092
+  TRACE_BOOTSTRAP_URL: >-
+    observai-persistent-kafka-bootstrap.kafka-space.svc.cluster.local:9092
+  APP_HOST: 0.0.0.0
+  METRIC_BOOTSTRAP_URL: >-
+    observai-persistent-kafka-bootstrap.kafka-space.svc.cluster.local:9092
+  METRIC_OFFSET_RESET: latest
+  KEPLER_TOPIC: kepler-zaga-vm
+  LOG_TOPIC: observai-main-logs-1
+  TRACE_TOPIC: observai-main-traces-1
+  TRACE_OFFSET_RESET: latest
+  LOG_OFFSET_RESET: latest
+  KEPLER_OFFSET_RESET: latest
+  APP_PORT: '8082'

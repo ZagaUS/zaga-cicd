@@ -1,0 +1,65 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: observai-query-api
+  namespace: observai-main
+  labels:
+    app: observai-query-api
+    app.kubernetes.io/component: observai-query-api
+    app.kubernetes.io/instance: observai-query-api
+    app.kubernetes.io/name: observai-query-api
+    app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime: quarkus
+    app.openshift.io/runtime-namespace: observai-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: observai-query-api
+  template:
+    metadata:
+      labels:
+        app: observai-query-api
+        deployment: observai-query-api
+    spec:
+      imagePullSecrets:
+        - name: sharanya-quay-secret
+      containers:
+        - name: observai-query-api
+          image: >-
+            quay.io/zagaos/observai-query-api:latest
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          env:
+            - name: APP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: APP_HOST
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: APP_PORT
+            - name: MONGODB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: observai-query-backend-config
+                  key: MONGODB_URL
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

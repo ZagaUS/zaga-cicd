@@ -1,0 +1,20 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: observai-persistance-api
+  namespace: observai-main
+  labels:
+    app: observai-persistance-api
+    app.kubernetes.io/component: observai-persistance-api
+    app.kubernetes.io/instance: observai-persistance-api
+    app.kubernetes.io/name: observai-persistance-api
+    app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime-version: latest
+spec:
+  host: observai-persistance-api-observai-main.apps.zagaopenshift.zagaopensource.com
+  to:
+    kind: Service
+    name: observai-persistance-api
+  port:
+    targetPort: 8082-tcp
+  wildcardPolicy: None

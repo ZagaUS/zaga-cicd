@@ -1,0 +1,45 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ include "kafka.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "kafka.labels" . | nindent 4 }}
+spec:
+  kafka:
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      inter.broker.protocol.version: '3.6'
+    storage:
+      type: {{ .Values.kafka.storage.type }}
+      size: {{ .Values.kafka.storage.size }}
+      class: {{ .Values.kafka.storage.class }}
+    listeners:
+      - name: {{ .Values.kafka.listeners.listener1.name }}
+        port: {{ .Values.kafka.listeners.listener1.port }}
+        type: {{ .Values.kafka.listeners.listener1.type }}
+        tls: {{ .Values.kafka.listeners.listener1.tls }}
+      - name: {{ .Values.kafka.listeners.listener2.name }}
+        port: {{ .Values.kafka.listeners.listener2.port }}
+        type: {{ .Values.kafka.listeners.listener2.type }}
+        tls: {{ .Values.kafka.listeners.listener2.tls }}
+    version: {{ .Values.kafka.version}}
+    replicas: {{ .Values.kafka.replicaCount}}
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  zookeeper:
+    storage:
+      type: {{ .Values.zookeeper.storage.type}}
+      class: {{ .Values.zookeeper.storage.class}}
+      size: {{ .Values.zookeeper.storage.size}}
+    replicas: {{ .Values.zookeeper.replicaCount}}
+
+
+
+
+

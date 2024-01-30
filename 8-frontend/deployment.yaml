@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: observai-ui
+  namespace: observai-main
+  labels:
+    app: observai-ui
+    app.kubernetes.io/component: observai-ui
+    app.kubernetes.io/instance: observai-ui
+    app.kubernetes.io/name: observai-ui
+    app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime: js
+    app.openshift.io/runtime-namespace: observai-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: observai-ui
+  template:
+    metadata:
+      labels:
+        app: observai-ui
+        deployment: observai-ui
+    spec:
+      imagePullSecrets:
+        - name: sharanya-quay-secret
+      containers:
+        - name: observai-ui
+          image: >-
+            quay.io/zagaos/observai-dashboard:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

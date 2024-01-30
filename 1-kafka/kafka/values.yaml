@@ -1,0 +1,75 @@
+# These are the minimal configurations for a kafka kind deployment 
+# Namespace in which the kafka resource to be deployed
+namespace : {}
+#  Configurations for the Kafka kind
+kafka:
+
+# Storage of the Kafka
+  storage:
+  # type of the storage
+    type: persistent-claim
+  
+  # size for the kafka storage
+    size: 15Gi
+
+  # storage class for the storage
+    class: lvms-vg1
+
+# Listener configuration for the kafka
+  listeners:
+  # listener 1 configuration for the internal connections
+    listener1:
+  
+    # name of the listener 1
+      name: plain
+
+    # port for the listener 1
+      port: 9092
+
+    # type for the listener 1
+      type: internal
+
+    # tls enablement for listner 1 
+      tls: false
+  # listener 2 configuration for the external connections
+    listener2:
+
+    # name of the listener 2
+      name: external
+    
+    # port for the listener 2
+      port: 9093
+
+    # type for the listener 2  
+      type: route
+    
+    # tls enablement for listner 2
+      tls: true
+
+  #  replica count for Kafka
+  replicaCount: 3
+
+  # version of the kafka
+  version: 3.6.0
+
+# configurations for the zookeeper
+zookeeper:
+
+  # storage for zookeeper
+  storage:
+
+    # zookeeper storage type
+    type: persistent-claim
+
+    # zookeeper storage class
+    class: lvms-vg1
+
+    # zookeeper storage size
+    size: 3Gi
+
+  # replica count for zookeeper
+  replicaCount: 3
+
+
+autoscaling:
+  enabled: false

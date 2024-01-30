@@ -1,0 +1,21 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: observai-ui
+  namespace: observai-main
+  labels:
+    app: observai-ui
+    app.kubernetes.io/component: observai-ui
+    app.kubernetes.io/instance: observai-ui
+    app.kubernetes.io/name: observai-ui
+    app.kubernetes.io/part-of: observai
+    app.openshift.io/runtime-version: latest
+spec:
+  host: observai-ui-observai-main.apps.zagaopenshift.zagaopensource.com
+  to:
+    kind: Service
+    name: observai-ui
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  wildcardPolicy: None

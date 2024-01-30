@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: observai-query-backend-config
+  namespace: observai-main
+data:
+  APP_HOST: 0.0.0.0
+  APP_PORT: '8081'
+  MONGODB_URL: >-
+    mongodb://root:pass123@observai-mongodb-community-0.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017,observai-mongodb-community-1.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017,observai-mongodb-community-2.observai-mongodb-community-svc.mongodb-space.svc.cluster.local:27017/admin?ssl=false

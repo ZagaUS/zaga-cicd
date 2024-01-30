@@ -1,0 +1,128 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: mongodb-custom-database
+  namespace: mongodb-space
+subjects:
+- kind: ServiceAccount
+  name: mongodb-custom-database
+- kind: ServiceAccount
+  name: mongodb-database
+roleRef:
+  kind: Role
+  name: mongodb-custom-database
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: mongodb-custom-database
+  namespace: mongodb-space
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - patch
+  - delete
+  - get
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mongodb-custom-database
+  namespace: mongodb-space
+
+--- 
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mongodb-database
+  namespace: mongodb-space
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-custom-database-admin-user
+  namespace: mongodb-space
+type: Opaque
+stringData:
+  password: admin123
+
+---
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: observai-mongodb-community
+  namespace: mongodb-space
+spec:
+  members: 3
+  type: ReplicaSet
+  version: "7.0.3"
+  security:
+    tls:
+      enabled: false
+    authentication:
+      modes:
+      - SCRAM
+  users:
+  - name: admin-user
+    db: admin
+    passwordSecretRef:
+      name: mongodb-custom-database-admin-user
+    roles:
+    - name: clusterAdmin
+      db: admin
+    - name: userAdminAnyDatabase
+      db: admin
+    scramCredentialsSecretName: mongodb-custom-database-scram
+  additionalMongodConfig:
+    storage.wiredTiger.engineConfig.journalCompressor: zlib
+  statefulSet:
+    serviceAccountName: mongodb-custom-database
+    imagePullSecrets:
+      - name: mukesh-docker-creds
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongod
+            resources:
+              limits:
+                cpu: "1"
+                memory: 2Gi
+              requests:
+                cpu: 500m
+                memory: 1Gi      
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - mongodb-custom-database
+                topologyKey: "kubernetes.io/hostname"
+      volumeClaimTemplates:
+      - metadata:
+          name: data-volume
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 20G
