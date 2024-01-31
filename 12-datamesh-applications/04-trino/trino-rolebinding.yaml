@@ -1,0 +1,16 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sa-to-custom-scc
+  namespace: datamesh-workspace
+subjects:
+  - kind: ServiceAccount
+    name: trino-default
+  - kind: ServiceAccount
+    name: superset-redis
+  - kind: ServiceAccount
+    name: superset
+roleRef:
+  kind: Role
+  name: custom-scc
+  apiGroup: rbac.authorization.k8s.io

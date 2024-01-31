@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: zaga-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres15-rhel8
+  template:
+    metadata:
+      labels:
+        app: postgres15-rhel8
+        deployment: postgres15-rhel8
+      # annotations:
+      #   openshift.io/generated-by: OpenShiftWebConsole
+    spec:
+      imagePullSecrets:
+      - name: mukesh-docker-creds
+      containers:
+        - name: postgres15-rhel8
+          image: docker.io/sharon0706/registration-postgres       
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRESQL_USER
+              value: adminuser
+            - name: POSTGRESQL_PASSWORD
+              value: admin123
+            - name: POSTGRESQL_DATABASE
+              value: admindb
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: postgres15-rhel8-vol
+              mountPath: /var/lib/pgsql/data
+      volumes:
+      - name: postgres15-rhel8-vol
+        persistentVolumeClaim:
+          claimName: zaga-postgres
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
