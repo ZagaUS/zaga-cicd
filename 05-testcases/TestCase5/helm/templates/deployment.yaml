@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.kafkaservice.name }}
+  namespace: {{.Values.kafkaservice.namespace}}
+  labels:
+    app: {{ .Values.kafkaservice.name }}
+    app.openshift.io/runtime: {{ .Values.kafkaservice.icon }}
+    app.kubernetes.io/part-of: testcase1
+spec:
+  replicas: {{ .Values.kafkaservice.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.kafkaservice.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.kafkaservice.name }}
+    spec:
+      imagePullSecrets:
+      - name: {{ .Values.imagesecret }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.kafkaservice.image.repository }}:{{ .Values.kafkaservice.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.kafkaservice.service.ports.port }}
+              protocol: TCP
+          env:
+            - name: PRODUCT_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: kafkaservice-config
+                  key: PRODUCT_TOPIC
+            - name: PRODUCT_BOOTSTRAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafkaservice-config
+                  key: PRODUCT_BOOTSTRAP_URL
+            - name: MONGODB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kafkaservice-config
+                  key: MONGODB_URL
+
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.vendorservice.name }}
+  namespace: {{.Values.vendorservice.namespace}}
+  labels:
+    app: {{ .Values.vendorservice.name }}
+    app.openshift.io/runtime: {{ .Values.vendorservice.icon }}
+    app.kubernetes.io/part-of: testcase1
+spec:
+  replicas: {{ .Values.vendorservice.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vendorservice.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vendorservice.name }}
+    spec:
+      imagePullSecrets:
+      - name: {{ .Values.imagesecret }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.vendorservice.image.repository }}:{{ .Values.vendorservice.image.tag}}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.vendorservice.service.ports.port }}
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: vendorservice-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: vendorservice-config
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: vendorservice-config
+                  key: POSTGRES_URL
+            - name: APP_APIURL
+              valueFrom:
+                configMapKeyRef:
+                  name: vendorservice-config
+                  key: APP_APIURL
+
+
+
+
+
+

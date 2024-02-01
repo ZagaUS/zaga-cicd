@@ -2,14 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
  name: zaga-hive
- namespace: datamesh-space
+ namespace: datamesh-observability
 spec:
  replicas: 1
  selector:
   matchLabels: 
     app: zaga-hive
  template:
-   metadata:
+   metadata:datamesh-space
+datamesh-space
+datamesh-space
     labels:
       app: zaga-hive
    spec:
@@ -25,7 +27,7 @@ spec:
        - name: HIVE_DB_EXTERNAL
          value: "true"
        - name: DATABASE_HOST
-         value: "zaga-postgres.datamesh-space.svc.cluster.local"
+         value: "zaga-postgres.datamesh-observability.svc.cluster.local"
        - name: DATABASE_PORT
          value: "5432"
        - name: DATABASE_DB
@@ -39,7 +41,7 @@ spec:
        - name: AWS_SECRET_ACCESS_KEY
          value: "zagasecretkey"
        - name: S3_ENDPOINT_URL
-         value: "http://zaga-minio-hl.datamesh-space.svc.cluster.local:9000"
+         value: "http://zaga-minio-hl.datamesh-observability.svc.cluster.local:9000"
        - name: S3_BUCKET
          value: "hivebucket"
        - name: S3_PREFIX

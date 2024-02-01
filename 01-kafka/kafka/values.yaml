@@ -13,7 +13,7 @@ kafka:
     size: 15Gi
 
   # storage class for the storage
-    class: lvms-vg1
+    class: ocs-storagecluster-cephfs
 
 # Listener configuration for the kafka
   listeners:
@@ -62,7 +62,7 @@ zookeeper:
     type: persistent-claim
 
     # zookeeper storage class
-    class: lvms-vg1
+    class: ocs-storagecluster-cephfs
 
     # zookeeper storage size
     size: 3Gi

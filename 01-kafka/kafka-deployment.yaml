@@ -5,7 +5,7 @@ metadata:
   labels:
     app: observai
     kafka-cluster: observai
-  namespace: kafka-space
+  namespace: kafka-observability
 spec:
   kafka:
     config:
@@ -18,7 +18,7 @@ spec:
     storage:
       type: persistent-claim
       size: 15Gi
-      class: lvms-vg1
+      class: ocs-storagecluster-cephfs
     listeners:
       - name: plain
         port: 9092

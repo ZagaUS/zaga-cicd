@@ -1,0 +1,37 @@
+namespace: observai-main
+imagesecret: sharanya-quay-secrets
+orderservice:
+  name: order-srv-1
+  icon: springboot
+  replicaCount: 1
+  image:
+    repository: quay.io/zagaos/orderproject_testcase_1
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 5089
+      targetPort: 5089
+  config:
+    POSTGRES_URL: "jdbc:postgresql://zaga-postgres.postgresql-space.svc.cluster.local:5432/observability-demo-tables"
+    POSTGRES_USER: "observability-demo-user"
+    POSTGRES_PASSWORD: "observability123"
+vendorservice:
+  name: vendor-srv-1
+  icon: quarkus
+  replicaCount: 1
+  image:
+    repository: quay.io/zagaos/vendorproject_testcase_1
+    tag: latest
+  service:
+    type: ClusterIP
+    ports:
+      port: 8080
+      targetPort: 8080
+  config:
+    POSTGRES_URL: "jdbc:postgresql://zaga-postgres.postgresql-space.svc.cluster.local:5432/observability-demo-tables"
+    POSTGRES_USER: "observability-demo-user"
+    POSTGRES_PASSWORD: "observability123"
+    APP_APIURL: "http://order-srv-1.observai-main.svc.cluster.local:5089/orders/getOrders"
+
+

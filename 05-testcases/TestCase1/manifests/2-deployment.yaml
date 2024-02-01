@@ -96,7 +96,7 @@ spec:
       containers:
         - name: vendor-srv-1
           image: >-
-            docker.io/harinolon/ocp-vendor-test1
+            quay.io/zagaos/vendorproject_testcase_1
           ports:
             - containerPort: 8080
               protocol: TCP

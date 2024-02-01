@@ -30,10 +30,10 @@ supplementalGroups:
   type: RunAsAny
 users:
 # addd namespace as per your wish
-- 
-- system:serviceaccount:
-- system:serviceaccount:
-- system:serviceaccount:
+- datamesh-observability
+- system:serviceaccount:datamesh-observability:zaga-minio-sa
+- system:serviceaccount:datamesh-observability:trino-dafault
+- system:serviceaccount:datamesh-observability:superset-serviceaccount
 groups:
 - system:cluster-admins
 - system:nodes
